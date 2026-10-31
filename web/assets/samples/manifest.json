@@ -1,0 +1,67 @@
+[
+  {
+    "file": "test.png",
+    "label": "仓库样例 test.png",
+    "default": false
+  },
+  {
+    "file": "gest.jpg",
+    "label": "手势样例 gest.jpg",
+    "default": false
+  },
+  {
+    "file": "img_0549.jpg",
+    "label": "样例图 05-49",
+    "default": false
+  },
+  {
+    "file": "img_0603.jpg",
+    "label": "样例图 06-03",
+    "default": false
+  },
+  {
+    "file": "img_0604.jpg",
+    "label": "样例图 06-04",
+    "default": false
+  },
+  {
+    "file": "img_0605.jpg",
+    "label": "样例图 06-05",
+    "default": false
+  },
+  {
+    "file": "img_0613.jpg",
+    "label": "样例图 06-13",
+    "default": false
+  },
+  {
+    "file": "padded_hand_a.jpg",
+    "label": "合成场景 A",
+    "default": true
+  },
+  {
+    "file": "padded_hand_b.jpg",
+    "label": "合成场景 B",
+    "default": false
+  },
+  {
+    "file": "padded_hand_c.jpg",
+    "label": "合成场景 C",
+    "default": false
+  },
+  {
+    "file": "padded_hand_d.jpg",
+    "label": "合成场景 D",
+    "default": false
+  },
+  {
+    "file": "padded_hand_e.jpg",
+    "label": "合成场景 E",
+    "default": false
+  },
+  {
+    "file": "padded_hand_f.jpg",
+    "label": "合成场景 F",
+    "default": false
+  }
+]

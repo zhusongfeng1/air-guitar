@@ -1,0 +1,359 @@
+:root {
+  --bg: #0d1117;
+  --panel: #161b22;
+  --panel-2: #1c2331;
+  --line: #2a3441;
+  --fg: #e6edf3;
+  --dim: #8b949e;
+  --accent: #37d67a;
+  --accent-2: #4c9aff;
+  --warn: #f0a35e;
+  --danger: #f4666a;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.55 "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+}
+
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 10px 18px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, #111823, #0d1117);
+}
+.brand { display: flex; align-items: center; gap: 9px; }
+.brand .dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 10px var(--accent);
+}
+.brand .sub { color: var(--dim); font-size: 12px; }
+
+.badge {
+  padding: 3px 10px; border-radius: 999px; font-size: 12px;
+  border: 1px solid var(--line); background: var(--panel);
+  color: var(--dim); white-space: nowrap;
+}
+.badge.ok { color: var(--accent); border-color: #1d5c3a; background: #10251b; }
+.badge.loading { color: var(--warn); border-color: #5c4520; background: #241d10; }
+.badge.error { color: var(--danger); border-color: #5c2225; background: #251012; }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 14px; padding: 14px; height: calc(100% - 53px);
+}
+
+.stage { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.viewport {
+  position: relative; flex: 1; min-height: 0;
+  background: #05070a; border: 1px solid var(--line); border-radius: 12px;
+  overflow: hidden; display: flex; align-items: center; justify-content: center;
+}
+#video {
+  max-width: 100%; max-height: 100%;
+  transform: scaleX(-1);       /* 自拍镜像 */
+  display: none;               /* 没摄像头时别渲染，否则浏览器会显示"无法播放媒体" */
+}
+.viewport.camera #video { display: block; }
+#overlay {
+  position: absolute; left: 0; top: 0;
+  pointer-events: none;
+}
+#still {
+  max-width: 100%; max-height: 100%; display: none;
+}
+#still.show { display: block; }
+.hint {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  text-align: center; background: rgba(5, 7, 10, .82); padding: 20px;
+}
+.hint.hidden { display: none; }
+.hint p { margin: 6px 0; }
+
+.stagebar { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill {
+  padding: 3px 10px; border-radius: 999px; font-size: 12px;
+  background: var(--panel); border: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+
+.panel {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px; overflow: auto; display: flex; flex-direction: column; gap: 12px;
+}
+.row { display: flex; gap: 8px; }
+
+button {
+  flex: 1; padding: 8px 12px; border-radius: 8px; cursor: pointer;
+  background: var(--panel-2); color: var(--fg);
+  border: 1px solid var(--line); font-size: 13px;
+}
+button:hover:not(:disabled) { border-color: #3d4a5c; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button.primary { background: #14432c; border-color: #1f7a4d; color: #b7f5d2; }
+button.mini { flex: 0 0 auto; padding: 2px 8px; font-size: 11px; }
+
+fieldset {
+  border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; margin: 0;
+}
+legend { color: var(--dim); font-size: 12px; padding: 0 5px; }
+fieldset label { display: inline-flex; align-items: center; gap: 5px; margin-right: 12px; font-size: 13px; }
+
+.samples { display: flex; flex-wrap: wrap; gap: 6px; }
+.samples button { flex: 0 0 auto; padding: 4px 9px; font-size: 12px; }
+
+.hands { display: flex; flex-direction: column; gap: 10px; font-size: 13px; }
+.hand {
+  border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; background: #12181f;
+}
+.hand h4 { margin: 0 0 6px; font-size: 13px; display: flex; justify-content: space-between; }
+.hand h4 .score { color: var(--dim); font-weight: 400; }
+.bars { display: flex; flex-direction: column; gap: 3px; margin: 6px 0; }
+.bar { display: grid; grid-template-columns: 54px 1fr 42px; align-items: center; gap: 6px; font-size: 12px; }
+.bar .track { height: 6px; border-radius: 3px; background: #22303f; overflow: hidden; }
+.bar .fill { height: 100%; background: linear-gradient(90deg, #2f6f4f, var(--accent)); }
+.bar .val { color: var(--dim); text-align: right; font-variant-numeric: tabular-nums; }
+.kv { color: var(--dim); font-size: 12px; }
+.kv b { color: var(--fg); font-weight: 600; }
+.stringtag {
+  display: inline-block; margin-top: 6px; padding: 2px 8px; border-radius: 6px;
+  background: #1b2a1f; border: 1px solid #2c6b45; color: #a8f0c6; font-size: 12px;
+}
+pre.json {
+  max-height: 180px; overflow: auto; margin: 6px 0 0; padding: 8px;
+  background: #0b1017; border: 1px solid var(--line); border-radius: 8px;
+  font-size: 11px; line-height: 1.45; color: #9fb3c8;
+}
+.dim { color: var(--dim); }
+.foot { font-size: 11.5px; line-height: 1.6; margin: 0; }
+
+@media (max-width: 980px) {
+  .layout { grid-template-columns: 1fr; height: auto; }
+  .viewport { min-height: 52vh; }
+}
+
+/* ---- 发声面板 ---- */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chips .chip {
+  padding: 7px 12px; font-size: 13px; font-weight: 600; letter-spacing: .3px;
+  background: #1a1f28; color: var(--fg); border: 1px solid #2a323f; border-radius: 8px;
+  cursor: pointer; transition: transform .06s ease, background .12s ease, border-color .12s ease;
+}
+.chips .chip:hover { background: #212836; border-color: #3a4557; }
+.chips .chip:active { transform: scale(.95); }
+.chips .chip.hit {
+  background: var(--accent); border-color: var(--accent); color: #06140d;
+  box-shadow: 0 0 0 3px rgba(63, 185, 120, .25);
+}
+label.inline { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--dim); }
+select.wide { display: block; width: 100%; padding: 6px 8px; font-size: 12px; }
+select { background: #1a1f28; color: var(--fg); border: 1px solid #2a323f; border-radius: 6px; padding: 3px 6px; font-size: 12px; }
+input[type="range"] { width: 90px; accent-color: var(--accent); }
+#audio-log { margin-top: 8px; line-height: 1.5; }
+
+/* ---- 六弦板：拨哪根弦就亮哪一根 ---- */
+.stringboard {
+  margin-top: 10px;
+  padding: 8px 10px 10px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.sb-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.sb-title { font-size: 12px; font-weight: 700; letter-spacing: .5px; }
+.sb-sel { font-size: 12px; color: var(--dim); }
+.sb-sel.on { color: var(--accent-2); font-weight: 600; }
+.sb-spacer { flex: 1; }
+
+.sb-rows { display: flex; flex-direction: column; gap: 3px; }
+.sb-row {
+  display: grid;
+  grid-template-columns: 1.6em 1.4em 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: background .12s ease, border-color .12s ease;
+}
+/* 预选（手势已经锁定这根弦，还没拨） */
+.sb-row.sel { background: rgba(76, 154, 255, .10); border-color: rgba(76, 154, 255, .35); }
+/* 刚拨响 */
+.sb-row.hit {
+  background: rgba(55, 214, 122, .18);
+  border-color: var(--accent);
+  animation: sbpop .34s ease-out;
+}
+@keyframes sbpop {
+  0% { transform: scale(1.035); box-shadow: 0 0 0 0 rgba(55, 214, 122, .55); }
+  100% { transform: scale(1); box-shadow: 0 0 0 14px rgba(55, 214, 122, 0); }
+}
+.sb-sym { font-size: 15px; text-align: center; filter: grayscale(.35); }
+.sb-row.sel .sb-sym, .sb-row.hit .sb-sym { filter: none; }
+.sb-num { font-size: 13px; font-weight: 700; color: var(--dim); text-align: center; }
+.sb-row.sel .sb-num { color: var(--accent-2); }
+.sb-row.hit .sb-num { color: var(--accent); }
+/* 那条"弦"本身：拨响时整条变绿并抖一下 */
+.sb-line { position: relative; height: 3px; border-radius: 2px; background: #303a48; }
+.sb-line i {
+  position: absolute; inset: 0;
+  border-radius: 2px;
+  background: var(--accent);
+  opacity: 0;
+}
+.sb-row.sel .sb-line { background: #3d5a86; }
+.sb-row.hit .sb-line i { animation: sbring .5s ease-out; }
+@keyframes sbring {
+  0% { opacity: 1; transform: translateY(-1.5px); }
+  40% { opacity: .75; transform: translateY(1.5px); }
+  100% { opacity: 0; transform: translateY(0); }
+}
+.sb-name { font-size: 12px; color: var(--fg); font-variant-numeric: tabular-nums; min-width: 3.2em; }
+.sb-count { font-size: 11px; color: var(--dim); font-variant-numeric: tabular-nums; }
+
+/* 最近拨过的弦 → 就是你自己弹出来的 TAB */
+.tab-strip { display: flex; gap: 3px; flex-wrap: nowrap; overflow: hidden; max-width: 46vw; }
+.tab-chip {
+  display: inline-flex; align-items: baseline; gap: 3px;
+  padding: 2px 5px; border-radius: 4px;
+  background: #1a1f28; border: 1px solid #2a323f;
+  font-size: 11px; font-variant-numeric: tabular-nums;
+  animation: tabin .18s ease-out;
+}
+.tab-chip b { color: var(--accent); }
+.tab-chip i { color: var(--dim); font-style: normal; font-size: 10px; }
+/* 和弦的 chip 用另一个颜色，和单音的弦区分开 */
+.tab-chip.chord { border-color: rgba(76, 154, 255, .4); }
+.tab-chip.chord b { color: var(--accent-2); }
+
+/* ---------------- 和弦模式 ---------------- */
+.chord-toggle { margin-top: 10px; }
+.chord-toggle label { color: var(--fg); }
+/* 和弦板：第 2 列放"编号 + 和弦名"，比"弦号"宽 */
+.sb-chord { grid-template-columns: 1.6em 6.8em 1fr auto auto; }
+.sb-chord .sb-num { font-size: 14px; }
+/* 编号 1..6：和和弦按钮上印的、键盘 1-6 用的是同一套顺序。
+   和弦模式下"伸 n 根手指 = 第 n 个"，所以这个数字必须显眼 */
+.sb-chord .sb-num b { color: var(--accent-2); font-size: 11px; margin-right: 3px; }
+.sb-frets { font-family: ui-monospace, Consolas, monospace; letter-spacing: 1px; color: var(--dim); }
+.sb-row.hit .sb-frets, .sb-row.sel .sb-frets { color: var(--fg); }
+
+/* 变调夹下"实际要按的指型"：跟在和弦名后面的小字。
+   显示名（要听到的）永远和和弦库一致，指型另标出来 —— 两者不一样时才出现 */
+.sb-num u,
+.chord-chip u {
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--accent-2);
+  margin-left: 3px;
+  opacity: .85;
+}
+.sb-num u::before, .chord-chip u::before { content: '↦'; margin-right: 1px; opacity: .7; }
+/* 变调下这个类型没有指型：标出来，别让人以为按了没声是自己的问题 */
+.sb-row.toneless .sb-num, .chord-chip.toneless { opacity: .45; }
+.sb-row.toneless .sb-frets { text-decoration: line-through; }
+
+.chord-row .chord-chip { display: inline-flex; align-items: baseline; gap: 5px; }
+.chord-chip b { color: var(--accent-2); font-size: 10px; }
+.chord-chip i {
+  font-style: normal;
+  font-size: 10px;
+  color: var(--dim);
+  font-family: ui-monospace, Consolas, monospace;
+  letter-spacing: .5px;
+}
+.chord-all { margin-top: 8px; border-top: 1px dashed #2b3341; padding-top: 6px; }.chord-group { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-bottom: 5px; }
+.chord-group-label { font-size: 11px; color: var(--dim); min-width: 5em; }
+.chips .chip.tiny { padding: 2px 7px; font-size: 11px; min-width: 2.6em; }
+/* 和弦模式下，把"这一行是第几个和弦"的提示条换个色 */
+body.chord-mode #sb-rows { background: rgba(76, 154, 255, .04); border-radius: 8px; }
+@keyframes tabin { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+/* 画面上的拨弦大字 */
+.pluck-flash {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  transform: translateX(-50%);
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(6, 20, 13, .72);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: .5px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
+.pluck-flash.go { animation: pflash .62s ease-out; }
+@keyframes pflash {
+  0% { opacity: 0; transform: translateX(-50%) translateY(10px) scale(.85); }
+  22% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.06); }
+  70% { opacity: 1; transform: translateX(-50%) translateY(-4px) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-16px) scale(1); }
+}
+
+/* ---- 演奏状态面板 ---- */
+.play-state {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  background: rgba(255, 255, 255, 0.04);
+  border-left: 3px solid var(--dim, #666);
+}
+.play-state.hit { border-left-color: #3fb950; background: rgba(63, 185, 80, 0.12); }
+.play-state.warn { border-left-color: #d29922; background: rgba(210, 153, 34, 0.12); }
+.play-state.idle { opacity: 0.85; }
+label.inline.wide { display: flex; gap: 8px; width: 100%; align-items: center; }
+label.inline.wide input[type=range] { flex: 1; }
+label.inline.wide select { flex: 1; }
+label.inline.wide b { min-width: 34px; text-align: right; font-variant-numeric: tabular-nums; }
+/* 伸展度条上的"平滑后位置"标记 */
+.bar .track { position: relative; }
+.bar .track .smooth {
+  position: absolute; top: -2px; width: 2px; height: 12px;
+  background: #f0f6fc; opacity: 0.85;
+}
+
+/* 判定阈值线 + 已判为"伸出"的手指高亮 */
+.bar .track .thresh {
+  position: absolute; top: -3px; width: 1px; height: 14px;
+  background: #d29922; opacity: 0.9;
+}
+.bar .val.on { color: #3fb950; font-weight: 600; }
+
+/* 手势校准 */
+.calib { margin-top: 8px; }
+.calib .row { display: flex; gap: 6px; }
+.calib .row button { flex: 1; }
+.calib p { margin: 4px 0 0; font-size: 12px; line-height: 1.5; }
+button.primary {
+  background: #238636; border-color: #2ea043; color: #fff; font-weight: 600;
+}
+button.primary:hover { background: #2ea043; }
+
+/* 判定依据 / "判定和手指数不符" 的警告。
+   这一块是给"手指数对但弦号全错"那个症状用的：必须把判定依据写在脸上，
+   否则用户看到的只是一行莫名其妙的结果，根本不知道是校准模板在改口径。 */
+.judge { margin-top: 4px; font-size: 11px; color: var(--dim); line-height: 1.45; }
+.judge.bad {
+  color: #ffc36b;
+  background: rgba(255, 170, 60, .08);
+  border-left: 2px solid #ffab3d;
+  padding: 4px 6px;
+  border-radius: 3px;
+}
+.judge b.warn { color: #ffab3d; }
+.sb-frets .warn { color: #ffab3d; }

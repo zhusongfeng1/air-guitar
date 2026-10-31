@@ -1,0 +1,20 @@
+{
+  "name": "air-guitar",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "摄像头手部关键点检测 → 空气吉他：按手势拨响真实吉他采样（零依赖、零 CDN）",
+  "scripts": {
+    "serve": "node tools/serve.js 8765",
+    "test": "node tools/test_landmarks.mjs && node tools/test_chords.mjs && node tools/test_audio.mjs && node tools/test_convolution.mjs && node tools/test_dom_wiring.mjs && node tools/test_launcher.mjs && node tools/check_samples.mjs && node tools/probe_chroma.mjs",
+    "test:gesture": "node tools/test_landmarks.mjs",
+    "test:chords": "node tools/test_chords.mjs",
+    "test:audio": "node tools/test_audio.mjs",
+    "test:page": "node tools/test_dom_wiring.mjs && node tools/test_launcher.mjs",
+    "samples": "python tools/prepare_samples.py",
+    "guitar": "python tools/fetch_guitar_samples.py"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

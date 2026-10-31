@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>手部 21 关键点检测 · air-guitar</title>
+<link rel="stylesheet" href="./css/app.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="dot"></span>
+    <strong>手部 21 关键点检测</strong>
+    <span class="sub">air-guitar · 第一步</span>
+  </div>
+  <div id="engine-badge" class="badge loading">引擎：加载中…</div>
+</header>
+
+<main class="layout">
+  <section class="stage">
+    <div class="viewport" id="viewport">
+      <video id="video" playsinline muted></video>
+      <canvas id="overlay"></canvas>
+      <div id="pluck-flash" class="pluck-flash" aria-hidden="true"></div>
+      <div id="hint" class="hint">
+        <div>
+          <p><strong>点击右侧「开启摄像头」开始</strong></p>
+          <p class="dim">没有摄像头？直接点下面的样例图片，一样能跑检测。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 六弦板：你拨了哪根弦，就在屏幕上亮哪一根 -->
+    <div class="stringboard">
+      <div class="sb-head">
+        <span class="sb-title">六弦板</span>
+        <span id="sb-selected" class="sb-sel">预选 —</span>
+        <span class="sb-spacer"></span>
+        <span id="tab-strip" class="tab-strip"></span>
+        <button id="btn-copy-tab" class="mini">复制 TAB</button>
+        <button id="btn-clear-tab" class="mini">清空</button>
+      </div>
+      <div id="sb-rows" class="sb-rows"></div>
+    </div>
+
+    <div class="stagebar">
+      <span id="fps" class="pill">FPS --</span>
+      <span id="latency" class="pill">推理 -- ms</span>
+      <span id="handcount" class="pill">手 --</span>
+      <span class="pill dim" id="resinfo">分辨率 --</span>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="row">
+      <button id="btn-start" class="primary">开启摄像头</button>
+      <button id="btn-stop" disabled>停止</button>
+    </div>
+
+    <fieldset>
+      <legend>摄像头 <button id="btn-refresh-cams" class="mini">重新扫描</button></legend>
+      <select id="sel-camera" class="wide"></select>
+      <p id="cam-note" class="foot dim">列表里会同时出现内置摄像头、外接 USB、以及手机/虚拟摄像头，选你要用的那个。</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>绘制</legend>
+      <label><input type="checkbox" id="chk-skeleton" checked> 骨架</label>
+      <label><input type="checkbox" id="chk-points" checked> 关键点</label>
+      <label><input type="checkbox" id="chk-index" checked> 序号</label>
+      <label><input type="checkbox" id="chk-bbox"> handpose_x 裁剪框</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>样例图片（无摄像头也能验证）</legend>
+      <div id="samples" class="samples"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>发声（真实吉他采样）</legend>
+      <div id="audio-badge" class="badge loading">音频：未加载</div>
+      <div class="row">
+        <label><input type="checkbox" id="chk-audio-on" checked> 手势驱动发声</label>
+        <label><input type="checkbox" id="chk-audio-mute" checked> 握拳闷音</label>
+      </div>
+      <div class="row">
+        <label class="inline">拨弦手
+          <select id="sel-strum-hand">
+            <option value="auto" selected>自动（任意手）</option>
+            <option value="Right">右手</option>
+            <option value="Left">左手</option>
+          </select>
+        </label>
+        <label class="inline">力度
+          <input type="range" id="rng-velocity" min="0.2" max="1" step="0.05" value="0.7">
+        </label>
+      </div>
+      <div id="string-buttons" class="chips"></div>
+
+      <div class="row chord-toggle">
+        <label><input type="checkbox" id="chk-chord-mode"> <b>和弦模式</b>（一次扫响整个和弦）</label>
+      </div>
+      <div id="chord-hint" class="kv dim"></div>
+      <label class="inline wide">和弦库（决定手势/按键对应的 6 个和弦）
+        <select id="sel-chord-bank"></select>
+      </label>
+      <div id="chord-buttons" class="chips chord-row"></div>
+      <div id="chord-all" class="chord-all"></div>
+
+      <div class="row">
+        <label class="inline wide">混响（空间感，声音不干）
+          <input type="range" id="rng-reverb" min="0" max="60" step="1" value="22">
+          <b id="reverb-val">22%</b>
+        </label>
+      </div>
+
+      <label class="inline wide">整体变调（对上歌曲的调）
+        <select id="sel-transpose">
+          <option value="0" selected>0 —— E 小调 / G 大调（E A D G B E）</option>
+          <option value="-1">−1 —— D#(Eb) 小调</option>
+          <option value="-2">−2 —— D 小调 / F 大调（D G C F A D）</option>
+          <option value="-3">−3 —— C#(Db) 小调</option>
+          <option value="-4">−4 —— C 小调 / Eb 大调（C F A# D# G C）</option>
+          <option value="-5">−5 —— B 小调（比 +7 低一个八度）</option>
+          <option value="1">+1 —— F 小调</option>
+          <option value="2">+2 —— F#(Gb) 小调</option>
+          <option value="3">+3 —— G 小调 / Bb 大调</option>
+          <option value="4">+4 —— G#(Ab) 小调</option>
+          <option value="5">+5 —— A 小调 / C 大调（A D G C E A）</option>
+          <option value="6">+6 —— A#(Bb) 小调</option>
+          <option value="7">+7 —— B 小调（B E A D F# B）</option>
+        </select>
+        <b id="transpose-val">6 根弦：E2 A2 D3 G3 B3 E4</b>
+      </label>
+      <div id="audio-log" class="kv dim">点一下上面的弦试听。手势：一只手伸 1-5 根手指选弦（🤘=6弦），另一只手张开=拨弦、握起=闷音。勾上「和弦模式」后，同样的手势改成选和弦、一次扫响整个和弦。</div>
+    </fieldset>
+
+    <fieldset>
+      <legend>手势灵敏度（不灵敏就调这里）</legend>
+      <label class="inline wide">伸指阈值
+        <input type="range" id="rng-sens" min="0.35" max="0.75" step="0.01" value="0.55">
+        <b id="sens-val">0.55</b>
+      </label>
+      <label class="inline wide">弦映射
+        <select id="sel-mapping">
+          <option value="count" selected>方案A：伸 N 指 = N 弦（拇指算一根）</option>
+          <option value="long">方案B：只数四根长指（拇指不稳时更准）</option>
+        </select>
+      </label>
+      <label class="inline wide">触发方式
+        <select id="sel-trigger">
+          <option value="both" selected>张开 或 挥动（默认，最灵敏）</option>
+          <option value="open">只认"张开手"（最稳，不误触）</option>
+          <option value="motion">只认"快速挥动"（适合真扫弦动作）</option>
+        </select>
+      </label>
+      <label class="inline wide">挥动阈值
+        <input type="range" id="rng-motion" min="1" max="8" step="0.5" value="3">
+        <b id="motion-val">3.0</b>
+      </label>
+      <div class="calib">
+        <div class="row">
+          <button id="btn-calibrate" class="primary">手势校准（推荐做一次）</button>
+          <button id="btn-cal-clear">清除校准</button>
+        </div>
+        <p id="cal-note" class="dim">未校准：用内置规则判定</p>
+        <p class="dim">校准会让你把 6 个手势各比划一次，记住你自己的手型。
+          拇指翘不翘、手离镜头远近都不同，这一步能直接消掉"比划 1 指变成 2 指"这类问题。</p>
+      </div>
+      <div id="play-state" class="play-state idle">等待画面…</div>
+      <pre id="sim-out" class="json hidden"></pre>
+    </fieldset>
+
+    <fieldset>
+      <legend>识别结果 <button id="btn-copy" class="mini">复制 JSON</button></legend>
+      <div id="hands" class="hands"><p class="dim">还没有数据</p></div>
+    </fieldset>
+
+    <p class="foot dim">
+      关键点编号遵循通用 21 点约定：0 腕 · 1-4 拇指 · 5-8 食指 · 9-12 中指 · 13-16 无名指 · 17-20 小指。
+    </p>
+    <p id="diag" class="foot dim"></p>
+  </aside>
+</main>
+
+<script type="module" src="./js/app.js"></script>
+</body>
+</html>

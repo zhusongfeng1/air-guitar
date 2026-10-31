@@ -1,0 +1,29 @@
+# ── 依赖 / 构建产物 / 临时目录 ──────────────────────────────────────
+node_modules/
+.tmp/
+*.log
+
+# ── 原始素材包（114 MB，超过 GitHub 单文件 100 MB 硬上限，push 会被拒绝）──
+# 需要它时按 README 第六节重新下载；web/assets/guitar/ 里已经裁好的 18 个采样
+# （3.9 MB）是提交进仓库的，clone 下来直接就有声音，不需要这个 zip。
+incoming/
+
+# ── 没有被任何代码引用的 onnxruntime-web 副本（143.6 MB / 511 文件）──
+# 代码只引用 web/vendor/mediapipe 和 web/vendor/models，
+# 留着它会让仓库凭空胖 3 倍。将来真要接 ort 引擎时再单独下载。
+web/vendor/ort/
+
+# ── 第三方仓库的克隆（别人的项目，不该塞进自己的仓库）──
+# handpose_x 引擎还没接上；接的时候按 README 里的地址 clone 到 third_party/ 即可。
+# 另外它的 samples/*.gif 就有 60 MB 的演示动图，更不该进版本库。
+third_party/handpose_x/
+
+# ── 操作系统 / 编辑器 ────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# ── 浏览器调试用的临时 profile（CDP 会往里写一堆东西）──
+*.cdp-profile/

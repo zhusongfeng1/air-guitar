@@ -1,0 +1,10 @@
+# 统一换行：源码一律 LF，避免 Windows 上 checkout 出 CRLF 导致的 diff 噪音。
+# 二进制文件（wasm / wav / task / png）让 git 自己判定，不要当文本处理。
+* text=auto eol=lf
+*.wasm binary
+*.wav   binary
+*.task  binary
+*.png   binary
+*.jpg   binary
+*.gif   binary
+*.zip   binary
